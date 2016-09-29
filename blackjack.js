@@ -1,64 +1,43 @@
-
 function runGame() {
 
-    var display = document.getElementById('cards');
-    cards = ['A', '2','3', '4','5',"6",'7','7','8', '9', "10", 'J', 'Q', 'K']
+    function checkResult(standing, hitting) {
 
-    function hit() {
-        var card = Math.round(Math.random() * cards.length);
-        display.innerHTML = cards[card];
-        checkResult('no', true);
+        if (totalCards > 21) {
+            alert('You Bust.');
+        } else if (totalCards === 19 && standing || totalCards === 20 && standing) {
+            alert('You win!');
+        } else if (totalCards < 16 && standing) {
+            alert('Dealer wins!');
+        } else if (totalCards === 19 && hitting || totalCards === 20 && hitting || totalCards === 21) {
+            alert('You win!');
+        } 
     }
 
-    /**
-     * Check the result of the current cards and alert the game result
-     *
-     * @param  {Boolean} standing  Whether or not the player is standing
-     * @param  {Boolean} hitting   Whether or not the player is hitting
-     * @return {void}
-     */
-    function checkResult(standing, hitting) {
-        cards = display.innerHTML.split(' ');
+    var display = document.getElementById('cards');
+    var cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'J', 'Q', 'K'];
+    var card = Math.floor(Math.random() * cards.length);
+    var secondCard = Math.floor(Math.random() * cards.length);
+    var totalCards = Number(card) + Number(secondCard) + 2;
 
-        var cardValue = 0;
-
-        cards.forEach(function (card, i) {
-            if (Number(card)) {
-                cardValue = cardValue + card;
-            }
-
-            if (card === 'J' || card == 'Q' || card === 'J')
-                cardValue = cardValue + 10;
-
-            if (cards[i] = 'A') { cardValue = cardValue += 11; }
-        });
-
-        if (cardValue < 15 && standing) {
-            alert('Dealer wins.');
-        }
-        if (cardValue < 18 && standing) {
-            alert('Push!');
-        }
-        if (cardValue > 18 & hitting || cardValue === 21) {
-            alert('You win!');
-        }
-        if (cardValue > 21) {
-            alert('You Bust.');
-        }
-
-    display.innerHTML = '';
-    card = Math.round(Math.random() * cards.length);
-    display.innerHTML = cards[card];
+    function hit() {
+        var hitCard = Math.floor(Math.random() * cards.length);
+        totalCards += hitCard + 1;
+        display.innerHTML = cards[hitCard];
+        checkResult(false, true);
+        console.log(totalCards);
     }
 
     document.getElementById('stand').addEventListener('click', function() {
-        checkREsult(true);
+        checkResult(true);
     });
 
-    document.getElementById('hit').addEventListener('click',function(){checkResult(null, true);});
+    document.getElementById('hit').addEventListener('click', function() {
+        hit();
+    });
 
-    card = Math.round(Math.random() * cards.length);
     display.innerHTML = cards[card];
-    card = Math.round(Math.random() * cards.length);
-    display.innerHTML = display.innerHTML + ' ' + cards[card];
+    display.innerHTML = display.innerHTML + ' ' + cards[secondCard];
+
+    checkResult(false, false);
 }
+runGame();
